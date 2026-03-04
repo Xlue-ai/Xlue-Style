@@ -1,0 +1,11 @@
+# Helper scripts (temporary, not part of the design system)
+do_translate.py
+fix_translate.py
+inject_section.py
+translate_check.py
+
+# OS
+.DS_Store
+
+# Editor
+.vscode/
