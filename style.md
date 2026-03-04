@@ -1,6 +1,6 @@
 # Xlue Design System & Style Guide
 
-> **Version: 1.1** | Updated: 2026-03-04
+> **Version: 1.2** | Updated: 2026-03-04
 > Scope: Xlue official website, Xlue Health Demo, sub-platforms, web applications, partner integration interfaces
 > Sources: `Xlue/xlue-style.md` + live product analysis of `Xlue-Health-Demo`
 
@@ -21,6 +21,8 @@
 11. [Tailwind Quick Reference](#11-tailwind-quick-reference)
 12. [Xlue Health Demo Specifics](#12-xlue-health-demo-specifics)
 13. [Do Nots](#13-do-nots)
+14. [Logo System](#14-logo-system)
+15. [Icon System](#15-icon-system)
 
 ---
 
@@ -296,7 +298,7 @@ p-4          → compact card padding (16px all sides)
 
 ```
 h-16  → 64px (fixed height)
-pt-20 → hero section top padding to compensate for nav height (80px)
+pt-20 → hero section top padding to compensate for nav height (80px)mpensate for nav height (80px)
 ```
 
 ### 5.6 Xlue Health Demo Layout Specifics
@@ -853,6 +855,299 @@ The following practices violate Xlue design standards — **do not use**:
 | Adding unapproved animation effects | Medical brands require a calm, restrained feel |
 | Using `rounded-none` on card components | All cards must have rounded corners |
 | Using brand color to indicate critical status in clinical interfaces | Confuses clinical severity semantics |
+
+---
+
+## 14. Logo System
+
+### 14.1 Logo Asset Inventory
+
+All brand logo files are stored in `assets/logos/`. Use this directory as the canonical source — do not copy SVG code inline or download alternatives from the web.
+
+| File | Dimensions | Format | Description | Primary context |
+|------|-----------|--------|-------------|----------------|
+| `logo-main.svg` | 148 × 75 px | SVG | **Full logo**: constellation mark + "Xlue" wordmark (teal→deep-teal gradient) | Website nav, hero, marketing materials |
+| `logo-health.svg` | 148 × 76 px | SVG | **Health variant**: full logo + heart/ECG icon + "Health" sub-brand text | Xlue Health Demo nav, health-product contexts |
+| `logo-mark.svg` | 116 × 54 px | SVG | **Constellation mark only**: the dot-cluster brand symbol, no text | Favicons, app icons, tight spaces, loading indicators |
+| `logo-wordmark.svg` | 134 × 48 px | SVG | **Wordmark only**: "Xlue" text in gradient, no constellation | Co-branding, light-background embeds, co-marketing |
+| `logo-final.png` | 1536 × 1024 px | PNG | **High-res full logo** raster | Print, pitch decks, presentations |
+| `logo-finance.png` | 1024 × 1024 px | PNG | **Finance vertical** logo variant | Xlue Finance product contexts |
+| `logo-legal.png` | 1024 × 1024 px | PNG | **Legal vertical** logo variant | Xlue Legal product contexts |
+
+---
+
+### 14.2 Logo Anatomy
+
+The Xlue logo is composed of three independent elements:
+
+```
+  •  •  •  •         ← Constellation Mark (brand symbol)
+     •  •    •          The ascending dot cluster represents AI
+   •    •  •             signal / data intelligence growth.
+
+  X  l  u  e         ← Wordmark
+                        Custom-drawn letterforms.
+                        Gradient: #008F91 (teal) → #1F4C4C (deep teal)
+
+  ♥ ECG             ← Health Sub-brand Mark (logo-health.svg only)
+  H e a l t h          Appears only in the Xlue Health product suite.
+```
+
+**Constellation dot colors:**
+- Teal dots: `#008F91` (brand primary)
+- Deep teal dots: `#1F4C4C` (brand dark)
+- Dots ascend and grow in size left→right, communicating AI signal growth
+
+**Wordmark gradient (embedded in SVG):**
+```css
+/* linearGradient applied to the wordmark path */
+stop 0%:   #008F91 (opacity 0.7)   /* teal, right side */
+stop 69%:  #1F4C4C                  /* deep teal, left side */
+/* Direction: right-to-left across the letterforms */
+```
+
+---
+
+### 14.3 Logo Color Variants
+
+| Variant | Background | File to use | Notes |
+|---------|-----------|-------------|-------|
+| **Full color** (default) | White / `#FAFAF8` | `logo-main.svg` | Always preferred |
+| **Full color on teal bg** | `#EFF4F4` or `#007D7D` | `logo-main.svg` | Works on brand backgrounds |
+| **Reversed / white** | Dark `#0D2B2B` | Apply `filter: brightness(0) invert(1)` | For dark-background contexts |
+| **Grayscale** | Any | Apply `filter: grayscale(1)` | Co-branding neutral treatment |
+
+> **Never** manually recolor the constellation dots or wordmark SVG paths. Use the CSS `filter` approach for mono or reversed rendering.
+
+---
+
+### 14.4 Clear Space & Minimum Size
+
+Maintain clear space equal to at least the cap-height of the "X" letterform (~12 px at default size) on all four sides of the logo.
+
+```
+  ┌─────────────────────────────┐
+  │  [clear]                    │
+  │  [clear]  LOGO  [clear]     │
+  │  [clear]                    │
+  └─────────────────────────────┘
+  Minimum clear zone ≈ 12 px at default render size
+```
+
+| Context | Minimum rendered width |
+|---------|------------------------|
+| Digital — full logo | 80 px |
+| Digital — mark only (`logo-mark.svg`) | 24 px |
+| Print — full logo | 25 mm |
+| Favicon (16 × 16 px) | Use `logo-mark.svg` |
+
+---
+
+### 14.5 Logo Usage in Code
+
+**React / Next.js (recommended):**
+```tsx
+import Image from 'next/image';
+import logoMain from '@/assets/logos/logo-main.svg';
+import logoHealth from '@/assets/logos/logo-health.svg';
+import logoMark from '@/assets/logos/logo-mark.svg';
+
+// Website nav — standard size
+<Image src={logoMain} alt="Xlue" width={148} height={75} />
+
+// Health Demo nav
+<Image src={logoHealth} alt="Xlue Health" width={148} height={76} />
+
+// Compact mark (tight spaces / favicon rendering)
+<Image src={logoMark} alt="Xlue" width={116} height={54} />
+```
+
+**Navigation scroll-triggered logo switch (website):**
+```tsx
+// Primary logo fades out when scroll enters the Features section;
+// Health logo fades in. Both logos must be in the DOM simultaneously.
+<div className={`transition-all duration-500 ${
+  isInFeatures
+    ? 'opacity-0 -translate-y-1 pointer-events-none'
+    : 'opacity-100 translate-y-0'
+}`}>
+  <Image src={logoMain} alt="Xlue" width={148} height={75} />
+</div>
+<div className={`absolute top-0 left-0 transition-all duration-500 ${
+  isInFeatures
+    ? 'opacity-100 translate-y-0'
+    : 'opacity-0 translate-y-1 pointer-events-none'
+}`}>
+  <Image src={logoHealth} alt="Xlue Health" width={148} height={76} />
+</div>
+```
+
+---
+
+### 14.6 Logo Do Nots
+
+| Prohibited | Reason |
+|------------|--------|
+| Stretching or distorting the logo aspect ratio | Destroys brand geometry |
+| Rendering the full logo below 80 px wide | Constellation dots become illegible |
+| Manually recoloring dot fills or wordmark paths in the SVG | Use CSS filters; never edit SVG source fills |
+| Using `logo-health.svg` in non-health contexts | Health sub-brand mark carries clinical positioning |
+| Placing the logo on busy photo backgrounds without a protective white zone | Destroys contrast and legibility |
+| Using the raster PNGs (`logo-final.png` etc.) in web UI | Always prefer SVG for web — infinite resolution, smaller size |
+| Adding drop shadows or outer glows to the logo | The constellation has its own visual depth; external effects clash |
+| Placing the logo inside a colored badge or pill shape | Creates unintended framing and dilutes brand authority |
+
+---
+
+## 15. Icon System
+
+### 15.1 Icon Library
+
+Both the Xlue website and Xlue Health Demo exclusively use **[Lucide React](https://lucide.dev)** as the icon library.
+
+```bash
+npm install lucide-react
+```
+
+```tsx
+import { Search, Shield, Brain } from 'lucide-react';
+```
+
+> **No other icon library** should be mixed in. Do not use Heroicons, FontAwesome, Phosphor, or Material Icons alongside Lucide.
+
+---
+
+### 15.2 Approved Icon Inventory
+
+#### Xlue Website
+
+| Lucide name | Component | Semantic role |
+|------------|-----------|---------------|
+| `Search` | `Features.tsx` | AI search capability |
+| `Shield` | `Features.tsx` | Privacy / security |
+| `Brain` | `Features.tsx` | Foundation model / AI |
+| `ArrowRight` | `Contact.tsx`, `About.tsx` | CTA / directional navigation |
+| `Stethoscope` | `Footer.tsx` | Health product identity |
+
+#### Xlue Health Demo — Copilot / AI
+
+| Lucide name | Component | Semantic role |
+|------------|-----------|---------------|
+| `Sparkles` | `CopilotPanel`, `CopilotMessageItem`, `CopilotChat` | AI / Copilot identity |
+| `Brain` | `DeepResearchThinking` | Deep research AI |
+| `MessageSquare` | `ChatHistorySidebar`, `CopilotChat` | Chat history |
+| `ClipboardCopy` | `CopilotPanel` | Copy AI output |
+| `History` | `CopilotPanel` | View chat history |
+| `RotateCcw` | `CopilotPanel` | Reset conversation |
+| `Send` | `CopilotPanel`, `CopilotChat` | Submit message |
+| `Lightbulb` | `DeepResearchThinking` | Insight / reasoning step |
+| `CheckCircle2` | `DeepResearchThinking`, `CopilotActionCard` | Completed step |
+| `Loader2` | `DeepResearchThinking` | Loading / in-progress |
+| `Eye` | `CopilotActionCard` | View detail |
+| `Undo2` | `CopilotActionCard` | Undo action |
+| `ChevronRight` / `ChevronDown` / `ChevronUp` | Multiple | Expand / collapse / navigate |
+| `ExternalLink` | `CopilotCitations` | Open source link |
+| `Quote` | `CopilotCitations` | Citation reference |
+
+#### Xlue Health Demo — Clinical Panels
+
+| Lucide name | Component | Semantic role |
+|------------|-----------|---------------|
+| `AlertTriangle` | Screening panels | Positive finding / alert |
+| `CheckCircle2` | Screening panels | Negative / normal result |
+| `AlertCircle` | `MedicationList` | Medication warning |
+| `Activity` | Screening, `PatientInfoCard` | Vitals / physiological activity |
+| `User` | `PatientInfoCard`, `PatientQueue` | Patient identity |
+| `Calendar` | `PatientInfoCard`, `VisitInfoPanel`, `MedicationList` | Date / schedule |
+| `UserCircle` | `ProvidersPanel` | Provider identity |
+| `Pill` | `ProvidersPanel`, `VisitInfoPanel`, `MedicationPanel`, `MedicationList` | Medication |
+| `Building2` | `ProvidersPanel` | Institution / facility |
+| `Stethoscope` | `VisitInfoPanel`, `ProcedurePanel`, `DiagnosisPanel` | Clinical examination |
+| `FileText` | `VisitInfoPanel`, `DeepResearchThinking` | Clinical notes / documents |
+| `Search` | `DeepResearchThinking` | Knowledge retrieval |
+| `DollarSign` | `ChargesPanel` | Charges |
+| `Receipt` | `ChargesPanel` | Billing receipt |
+| `Clock` | `PatientQueue` | Waiting time |
+| `Syringe` | `OrdersPanel` | Injection / infusion order |
+| `Package` | `OrdersPanel` | Supply order |
+| `Plus` | `ChatHistorySidebar` | New chat |
+| `Trash2` | `ChatHistorySidebar` | Delete chat |
+| `X` | `ChatHistorySidebar` | Close panel |
+
+---
+
+### 15.3 Icon Sizing Convention
+
+| Context | Class | px | Notes |
+|---------|-------|----|-------|
+| Feature icon (website hero, inside gradient container) | `w-8 h-8` | 32 px | White color, `strokeWidth={1.5}` at this size |
+| Navigation / standard interactive | `w-5 h-5` | 20 px | Default for most UI icons |
+| Compact / inline with text | `w-4 h-4` | 16 px | Inside tight components, badges |
+| Clinical status indicator | `w-4 h-4` | 16 px | Alert / check icons in panels |
+| CTA arrow | `w-5 h-5` | 20 px | `ArrowRight`, `ExternalLink` |
+| Copilot / AI identity (`Sparkles`, `Brain`) | `w-6 h-6` | 24 px | Prominent heading / identity positions |
+
+> Use `strokeWidth={1.5}` (instead of the default `2`) for icons rendered at 28 px or larger to avoid visual heaviness.
+
+---
+
+### 15.4 Icon Color Convention
+
+| Context | Color | Tailwind class |
+|---------|-------|----------------|
+| Feature icons (inside gradient container) | White | `text-white` |
+| Navigation / interactive actions | Brand primary | `text-[#007D7D]` |
+| CTA arrows | Brand primary or inherited text | `text-[#007D7D]` |
+| Clinical normal / passed | Brand primary | `text-[#007D7D]` |
+| Clinical warning | Amber-700 | `text-amber-700` |
+| Clinical critical | Red-700 | `text-red-700` |
+| Informational | Blue-700 | `text-blue-700` |
+| Disabled / muted | Tertiary text | `text-[#5C6C6C]` |
+| Copilot AI identity (`Sparkles`) | Brand primary | `text-[#007D7D]` |
+
+---
+
+### 15.5 Icon Usage Patterns
+
+**Feature icon container (website):**
+```tsx
+<div
+  className="w-16 h-16 rounded-xl shadow-lg flex items-center justify-center"
+  style={{ background: 'linear-gradient(135deg, #00948A, #3A5A56)' }}
+>
+  <Brain className="w-8 h-8 text-white" strokeWidth={1.5} />
+</div>
+```
+
+**Clinical status icons:**
+```tsx
+// Positive / alert finding
+<AlertTriangle className="w-4 h-4 text-amber-700" />
+
+// Normal / negative result
+<CheckCircle2 className="w-4 h-4 text-[#007D7D]" />
+
+// Critical finding
+<AlertTriangle className="w-4 h-4 text-red-700" />
+```
+
+**Copilot AI identity badge:**
+```tsx
+<div className="flex items-center gap-2">
+  <Sparkles className="w-6 h-6 text-[#007D7D]" />
+  <span className="font-semibold text-[#0D2B2B]">Xlue Copilot</span>
+</div>
+```
+
+**CTA button with arrow:**
+```tsx
+<button className="flex items-center gap-2 bg-[#007D7D] hover:bg-[#00A7A2] text-white px-6 py-3 rounded-md transition-colors">
+  Learn More
+  <ArrowRight className="w-5 h-5" />
+</button>
+```
+
+---
 
 ---
 
