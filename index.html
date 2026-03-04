@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Xlue Design System</title>
+  <meta name="description" content="Xlue Brand & Design System — Colors, Typography, Components" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ─────────────────────────────────────────
+       CSS Custom Properties — Xlue Token System
+    ───────────────────────────────────────── */
+    :root {
+      /* Brand Colors */
+      --color-primary:        #007D7D;
+      --color-primary-hover:  #00A7A2;
+      --color-primary-light:  #009C9C;
+      --color-primary-dark:   #005A5A;
+      --color-gradient-start: #00948A;
+      --color-gradient-end:   #3A5A56;
+
+      /* Background Layers */
+      --bg-l0:   #FAFAF8;  /* Body */
+      --bg-l1:   #EFF4F4;  /* Cards / Sections */
+      --bg-l2:   #F4F7F6;  /* Footer */
+      --bg-card: #FFFFFF;  /* Pure white cards */
+
+      /* Text */
+      --text-primary:   #0D2B2B;
+      --text-secondary: #2C4444;
+      --text-tertiary:  #5C6C6C;
+      --text-weak:      rgba(14,46,46,0.8);
+
+      /* Borders */
+      --border-default: #D8E2E0;
+      --border-dark:    rgba(255,255,255,0.08);
+
+      /* Badge */
+      --badge-bg:     rgba(0,125,125,0.20);
+      --badge-text:   #007D7D;
+      --badge-border: rgba(0,125,125,0.40);
+
+      /* Shadows */
+      --shadow-card:  0 4px 12px rgba(0,0,0,0.15);
+      --shadow-light: 0 2px 8px rgba(0,0,0,0.08);
+
+      /* Radius */
+      --radius-sm:   6px;
+      --radius-md:   8px;
+      --radius-lg:   12px;
+      --radius-xl:   16px;
+      --radius-full: 9999px;
+
+      /* Typography */
+      --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+                   "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    /* ─────────────────────────────────────────
+       Reset & Base
+    ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.5;
+      background-color: var(--bg-l0);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ─────────────────────────────────────────
+       Layout Utilities
+    ───────────────────────────────────────── */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+    .container--md  { max-width: 960px;  margin: 0 auto; padding: 0 2rem; }
+    .container--sm  { max-width: 768px;  margin: 0 auto; padding: 0 2rem; }
+
+    .section {
+      padding: 5rem 0;
+    }
+    .section--alt {
+      background-color: var(--bg-l1);
+    }
+    .section--footer {
+      background-color: var(--bg-l2);
+      border-top: 1px solid var(--border-default);
+      padding: 3rem 0;
+    }
+
+    .section-title {
+      font-size: 1.875rem;      /* 30px — H2 */
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    .section-subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+    }
+    .divider {
+      height: 1px;
+      background-color: var(--border-default);
+      margin: 3rem 0;
+    }
+
+    /* Grid helpers */
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+    @media (max-width: 900px) {
+      .grid-3 { grid-template-columns: 1fr; }
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .grid-4 { grid-template-columns: 1fr; }
+    }
+
+    /* ─────────────────────────────────────────
+       Gradient Text (Brand Standard)
+    ───────────────────────────────────────── */
+    .text-gradient {
+      background: linear-gradient(to right, var(--color-gradient-start), var(--color-gradient-end));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .text-gradient--bright {
+      background: linear-gradient(to right, var(--color-primary), var(--color-primary-light));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* ─────────────────────────────────────────
+       Navigation
+    ───────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 64px;
+      background-color: rgba(250,250,248,0.90);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-default);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+    }
+    .nav__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav__logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .nav__logo span { color: var(--color-primary); }
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      list-style: none;
+    }
+    .nav__link {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      text-decoration: none;
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-md);
+      transition: color 0.2s, background-color 0.2s;
+    }
+    .nav__link:hover { color: var(--color-primary-hover); background-color: rgba(0,125,125,0.06); }
+    .nav__cta {
+      background-color: var(--color-primary);
+      color: #fff;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      transition: background-color 0.2s;
+    }
+    .nav__cta:hover { background-color: var(--color-primary-hover); }
+
+    /* ─────────────────────────────────────────
+       Hero
+    ───────────────────────────────────────── */
+    .hero {
+      padding-top: 7rem;
+      padding-bottom: 5rem;
+      text-align: center;
+    }
+    .hero__eyebrow {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      background-color: var(--badge-bg);
+      border: 1px solid var(--badge-border);
+      border-radius: var(--radius-full);
+      padding: 0.25rem 0.875rem;
+      margin-bottom: 1.25rem;
+    }
+    .hero__title {
+      font-size: clamp(2.25rem, 5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.025em;
+    }
+    .hero__desc {
+      font-size: 1.125rem;
+      line-height: 1.625;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    /* ─────────────────────────────────────────
+       Buttons
+    ───────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      padding: 0.625rem 1.5rem;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+      line-height: 1;
+    }
+    .btn--primary {
+      background-color: var(--color-primary);
+      color: #fff;
+    }
+    .btn--primary:hover { background-color: var(--color-primary-hover); }
+
+    .btn--secondary {
+      background-color: transparent;
+      color: var(--color-primary);
+      border: 1.5px solid var(--color-primary);
+    }
+    .btn--secondary:hover {
+      background-color: rgba(0,125,125,0.06);
+      border-color: var(--color-primary-hover);
+      color: var(--color-primary-hover);
+    }
+
+    .btn--ghost {
+      background-color: transparent;
+      color: var(--text-secondary);
+    }
+    .btn--ghost:hover { background-color: rgba(0,0,0,0.04); color: var(--text-primary); }
+
+    .btn--lg {
+      font-size: 1rem;
+      padding: 0.875rem 2rem;
+    }
+    .btn--sm {
+      font-size: 0.8125rem;
+      padding: 0.375rem 1rem;
+    }
+
+    /* ─────────────────────────────────────────
+       Badges
+    ───────────────────────────────────────── */
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background-color: var(--badge-bg);
+      color: var(--badge-text);
+      border: 1px solid var(--badge-border);
+      border-radius: var(--radius-sm);
+      padding: 0.2rem 0.6rem;
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+      cursor: default;
+    }
+    .badge:hover {
+      background-color: rgba(0,156,156,0.20);
+      color: var(--color-primary-light);
+      border-color: rgba(0,156,156,0.40);
+    }
+    .badge--pill { border-radius: var(--radius-full); }
+
+    /* ─────────────────────────────────────────
+       Cards
+    ───────────────────────────────────────── */
+    .card {
+      background-color: var(--bg-card);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      box-shadow: var(--shadow-card);
+    }
+    .card--surface {
+      background-color: var(--bg-l1);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      box-shadow: var(--shadow-light);
+    }
+    .card--feature {
+      background-color: var(--bg-l1);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      text-align: center;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .card--feature:hover {
+      box-shadow: var(--shadow-card);
+      transform: translateY(-2px);
+    }
+
+    /* ─────────────────────────────────────────
+       Feature Icon
+    ───────────────────────────────────────── */
+    .feature-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+    .feature-icon--1 { background: linear-gradient(135deg, #007D7D, #005A5A); }
+    .feature-icon--2 { background: linear-gradient(135deg, #008A8A, #006A6A); }
+    .feature-icon--3 { background: linear-gradient(135deg, #009C9C, #007A7A); }
+
+    .feature-icon svg, .feature-icon .icon-placeholder {
+      width: 32px; height: 32px; color: #fff;
+    }
+    .icon-placeholder {
+      font-size: 1.5rem;
+      color: #fff;
+      line-height: 1;
+    }
+
+    /* ─────────────────────────────────────────
+       Color Swatch
+    ───────────────────────────────────────── */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .swatch {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-light);
+    }
+    .swatch__color {
+      height: 80px;
+      width: 100%;
+    }
+    .swatch__info {
+      background-color: var(--bg-card);
+      padding: 0.625rem 0.75rem;
+    }
+    .swatch__name {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .swatch__hex {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      color: var(--text-tertiary);
+    }
+
+    /* ─────────────────────────────────────────
+       Typography Showcase
+    ───────────────────────────────────────── */
+    .type-row {
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border-default);
+      display: flex;
+      align-items: baseline;
+      gap: 2rem;
+    }
+    .type-row:last-child { border-bottom: none; }
+    .type-meta {
+      min-width: 180px;
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      color: var(--text-tertiary);
+      line-height: 1.6;
+    }
+    .type-meta strong { color: var(--color-primary); }
+
+    /* ─────────────────────────────────────────
+       Founder / Person Card
+    ───────────────────────────────────────── */
+    .person-card {
+      background-color: var(--bg-card);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+    }
+    .person-card__avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: var(--shadow-light);
+      margin: 0 auto 1rem;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .person-card__avatar-initials {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .person-card__name  { font-size: 1.125rem; font-weight: 700; color: var(--text-primary); }
+    .person-card__title { font-size: 0.875rem; color: var(--text-secondary); margin: 0.25rem 0 0.5rem; }
+    .person-card__desc  { font-size: 0.875rem; color: var(--text-tertiary); line-height: 1.6; }
+
+    /* ─────────────────────────────────────────
+       News Card
+    ───────────────────────────────────────── */
+    .news-card {
+      background-color: var(--bg-l1);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-light);
+    }
+    .news-card__meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .news-card__date { font-size: 0.8125rem; color: var(--text-tertiary); }
+    .news-card__title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+    }
+    .news-card__link {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--color-primary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .news-card__link:hover { color: var(--color-primary-hover); }
+
+    /* ─────────────────────────────────────────
+       Section Health (Feature BG)
+    ───────────────────────────────────────── */
+    .section-health {
+      background-color: var(--bg-l1);
+      color: var(--text-primary);
+      border-radius: var(--radius-xl);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+      padding: 3rem;
+    }
+
+    /* ─────────────────────────────────────────
+       Code Block
+    ───────────────────────────────────────── */
+    .code-block {
+      background-color: #0D2B2B;
+      color: #7ECFCC;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      line-height: 1.7;
+      padding: 1.5rem;
+      border-radius: var(--radius-lg);
+      overflow-x: auto;
+      tab-size: 2;
+    }
+    .code-block .comment { color: #5C9CA0; }
+    .code-block .key     { color: #A8D8D6; }
+    .code-block .value   { color: #7ECFCC; }
+    .code-block .string  { color: #B3E8E5; }
+    .code-block .prop    { color: #80CBC8; }
+
+    /* ─────────────────────────────────────────
+       Divider Label
+    ───────────────────────────────────────── */
+    .divider-label {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 2.5rem 0;
+      color: var(--text-tertiary);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .divider-label::before, .divider-label::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background-color: var(--border-default);
+    }
+
+    /* ─────────────────────────────────────────
+       Component Demo Wrapper
+    ───────────────────────────────────────── */
+    .demo-box {
+      border: 1px dashed var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      background-color: var(--bg-card);
+    }
+
+    /* ─────────────────────────────────────────
+       Input / Form
+    ───────────────────────────────────────── */
+    .input {
+      font-family: var(--font-sans);
+      font-size: 0.9375rem;
+      padding: 0.625rem 1rem;
+      border: 1.5px solid var(--border-default);
+      border-radius: var(--radius-md);
+      background-color: var(--bg-card);
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+      max-width: 320px;
+    }
+    .input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(0,125,125,0.12);
+    }
+    .input::placeholder { color: var(--text-tertiary); }
+
+    /* ─────────────────────────────────────────
+       Footer
+    ───────────────────────────────────────── */
+    .footer__grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    @media (max-width: 768px) {
+      .footer__grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .footer__grid { grid-template-columns: 1fr; }
+    }
+    .footer__brand-name {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    .footer__tagline {
+      font-size: 0.875rem;
+      color: var(--text-weak);
+      line-height: 1.625;
+      margin-bottom: 1rem;
+    }
+    .footer__col-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+    .footer__links { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .footer__link {
+      font-size: 0.875rem;
+      color: var(--text-weak);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer__link:hover { color: var(--text-primary); }
+    .footer__bottom {
+      border-top: 1px solid var(--border-default);
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .footer__copy {
+      font-size: 0.8125rem;
+      color: var(--text-weak);
+    }
+
+    /* ─────────────────────────────────────────
+       Responsive Nav
+    ───────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .nav__links { display: none; }
+      .hero__title { font-size: 2rem; }
+      .section { padding: 3rem 0; }
+      .section-health { padding: 2rem; }
+    }
+
+    /* ─────────────────────────────────────────
+       Scroll Offset for Fixed Nav
+    ───────────────────────────────────────── */
+    [id] { scroll-margin-top: 72px; }
+
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAVIGATION ─── -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="#" class="nav__logo">Xlue<span>.</span></a>
+      <ul class="nav__links">
+        <li><a href="#colors"     class="nav__link">Colors</a></li>
+        <li><a href="#typography" class="nav__link">Typography</a></li>
+        <li><a href="#components" class="nav__link">Components</a></li>
+        <li><a href="#layout"     class="nav__link">Layout</a></li>
+        <li><a href="#tokens"     class="nav__link">Tokens</a></li>
+      </ul>
+      <a href="#tokens" class="nav__cta">View Tokens</a>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section class="hero container">
+    <span class="hero__eyebrow">Design System · v1.0 · 2026</span>
+    <h1 class="hero__title">
+      The <span class="text-gradient">Xlue</span> Brand &amp;<br/>Design System
+    </h1>
+    <p class="hero__desc">
+      A comprehensive reference for Xlue's visual language — color, typography,
+      components, and layout principles powering every Xlue product.
+    </p>
+    <div class="hero__actions">
+      <a href="#colors" class="btn btn--primary btn--lg">Explore System</a>
+      <a href="style.md" class="btn btn--secondary btn--lg">Read style.md</a>
+    </div>
+  </section>
+
+  <!-- ─── COLOR SYSTEM ─── -->
+  <section id="colors" class="section">
+    <div class="container">
+      <h2 class="section-title">Color System</h2>
+      <p class="section-subtitle">Xlue 的青色系品牌色盤，以信賴感、科技感與醫療嚴謹性為核心設計原則</p>
+
+      <div class="divider-label">Brand Primary</div>
+      <div class="swatch-grid">
+        <div class="swatch">
+          <div class="swatch__color" style="background:#007D7D;"></div>
+          <div class="swatch__info">
+            <div class="swatch__name">Brand Primary</div>
+            <div class="swatch__hex">#007D7D · --primary</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background:#00A7A2;"></div>
+          <div class="swatch__info">
+            <div class="swatch__name">Brand Hover</div>
+            <div class="swatch__hex">#00A7A2</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background:#009C9C;"></div>
+          <div class="swatch__info">
+            <div class="swatch__name">Brand Light</div>
+            <div class="swatch__hex">#009C9C</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background:#005A5A;"></div>
+          <div class="swatch__info">
+            <div class="swatch__name">Brand Dark</div>
+            <div class="swatch__hex">#005A5A</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background:linear-gradient(to right,#00948A,#3A5A56);"></div>
+          <div class="swatch__info">
+            <div class="swatch__name">Gradient (Title)</div>
+            <div class="swatch__hex">#00948A → #3A5A56</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background:linear-gradient(to right,#007D7D,#009C9C);"></div>
+          <div class="swatch__info">
+            <div class="swatch__name">Gradient (Bright)</div>
+            <div class="swatch__hex">#007D7D → #009C9C</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider-label">Background Layers</div>
+      <div class="swatch-grid">
+        <div class="swatch">
+          <div class="swatch__color" style="background:#FAFAF8; border:1px solid #e0e0e0;"></div>
+          <div class="swatch__info">
+            <div class="swatch__name">L0 Body</div>
+            <div class="swatch__hex">#FAFAF8 · --background</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background:#EFF4F4;"></div>
+          <div class="swatch__info">
+            <div class="swatch__name">L1 Surface</div>
+            <div class="swatch__hex">#EFF4F4 · --surface-900</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background:#F4F7F6;"></div>
+          <div class="swatch__info">
+            <div class="swatch__name">L2 Footer</div>
+            <div class="swatch__hex">#F4F7F6</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background:#FFFFFF; border:1px solid #e0e0e0;"></div>
+          <div class="swatch__info">
+            <div class="swatch__name">L3 Card</div>
+            <div class="swatch__hex">#FFFFFF · --card</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider-label">Text &amp; Borders</div>
+      <div class="swatch-grid">
+        <div class="swatch">
+          <div class="swatch__color" style="background:#0D2B2B;"></div>
+          <div class="swatch__info">
+            <div class="swatch__name">Text Primary</div>
+            <div class="swatch__hex">#0D2B2B · --foreground</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background:#2C4444;"></div>
+          <div class="swatch__info">
+            <div class="swatch__name">Text Secondary</div>
+            <div class="swatch__hex">#2C4444 · --muted-fg</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background:#5C6C6C;"></div>
+          <div class="swatch__info">
+            <div class="swatch__name">Text Tertiary</div>
+            <div class="swatch__hex">#5C6C6C</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background:#D8E2E0; border:1px solid #ccc;"></div>
+          <div class="swatch__info">
+            <div class="swatch__name">Border</div>
+            <div class="swatch__hex">#D8E2E0 · --border</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider-label">Feature Icon Gradients</div>
+      <div class="swatch-grid">
+        <div class="swatch">
+          <div class="swatch__color" style="background:linear-gradient(135deg,#007D7D,#005A5A);"></div>
+          <div class="swatch__info">
+            <div class="swatch__name">Icon — Card 1</div>
+            <div class="swatch__hex">#007D7D → #005A5A</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background:linear-gradient(135deg,#008A8A,#006A6A);"></div>
+          <div class="swatch__info">
+            <div class="swatch__name">Icon — Card 2</div>
+            <div class="swatch__hex">#008A8A → #006A6A</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background:linear-gradient(135deg,#009C9C,#007A7A);"></div>
+          <div class="swatch__info">
+            <div class="swatch__name">Icon — Card 3</div>
+            <div class="swatch__hex">#009C9C → #007A7A</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TYPOGRAPHY ─── -->
+  <section id="typography" class="section section--alt">
+    <div class="container">
+      <h2 class="section-title">Typography</h2>
+      <p class="section-subtitle">系統字體堆疊 · Inter 為優先載入字體 · 等寬碼字使用 JetBrains Mono</p>
+
+      <div class="type-row">
+        <div class="type-meta"><strong>Display H1</strong><br/>48px · Bold 700<br/>leading-tight 1.25</div>
+        <div style="font-size:3rem;font-weight:700;line-height:1.15;letter-spacing:-0.025em;">
+          Health Foundation Model
+        </div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>Display H1 (Gradient)</strong><br/>48px · Bold 700<br/>Brand gradient</div>
+        <div style="font-size:3rem;font-weight:700;line-height:1.15;letter-spacing:-0.025em;" class="text-gradient">
+          Revolutionizing Medicine
+        </div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>H2 Section</strong><br/>30px · Bold 700<br/>leading-tight</div>
+        <div style="font-size:1.875rem;font-weight:700;line-height:1.25;">Our Mission &amp; Vision</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>H2 Card</strong><br/>24px · Bold 700</div>
+        <div style="font-size:1.5rem;font-weight:700;">Clinical Decision Support</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>H3 Feature</strong><br/>18px · Bold 700</div>
+        <div style="font-size:1.125rem;font-weight:700;">Patient-Centered Intelligence</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>H4 Sub</strong><br/>20px · Semi 600</div>
+        <div style="font-size:1.25rem;font-weight:600;color:var(--text-secondary);">About Xlue Platform</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>Body Large</strong><br/>18px · Regular 400<br/>leading-relaxed 1.625</div>
+        <div style="font-size:1.125rem;line-height:1.625;color:var(--text-secondary);max-width:600px;">
+          Xlue is a Carnegie Mellon University spin-off dedicated to building
+          Health Foundation Models that empower clinical decision-making.
+        </div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>Body Base</strong><br/>16px · Regular 400</div>
+        <div style="font-size:1rem;line-height:1.5;color:var(--text-secondary);max-width:600px;">
+          Our platform integrates multi-modal patient data to surface
+          evidence-based recommendations at the point of care.
+        </div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>Body Small</strong><br/>14px · Regular/Medium</div>
+        <div style="font-size:0.875rem;color:var(--text-tertiary);">Navigation · Labels · Footer links · Metadata</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>Caption / Mono</strong><br/>12px / JetBrains Mono</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--text-tertiary);">
+          #007D7D · hsl(180 100% 25%) · --primary
+        </div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>Uppercase Label</strong><br/>12px · Med 500<br/>tracking-wide</div>
+        <div style="font-size:0.75rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-primary);">
+          Press Release · Research · Clinical AI
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── COMPONENTS ─── -->
+  <section id="components" class="section">
+    <div class="container">
+      <h2 class="section-title">Components</h2>
+      <p class="section-subtitle">所有 UI 元件依照 Xlue 設計規範建構，保持品牌一致性</p>
+
+      <!-- Buttons -->
+      <div class="divider-label">Buttons</div>
+      <div class="demo-box">
+        <button class="btn btn--primary btn--lg">Get Started →</button>
+        <button class="btn btn--primary">Primary</button>
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--secondary btn--lg">Learn More</button>
+        <button class="btn btn--secondary">Outline</button>
+        <button class="btn btn--ghost">Ghost</button>
+      </div>
+
+      <!-- Badges -->
+      <div class="divider-label">Badges &amp; Tags</div>
+      <div class="demo-box">
+        <span class="badge badge--pill">Press Release</span>
+        <span class="badge badge--pill">Research</span>
+        <span class="badge badge--pill">Clinical AI</span>
+        <span class="badge">Foundation Models</span>
+        <span class="badge">CMU Spin-off</span>
+        <span class="badge">Healthcare</span>
+      </div>
+
+      <!-- Input -->
+      <div class="divider-label">Form Input</div>
+      <div class="demo-box">
+        <input class="input" type="text" placeholder="Enter email address…" />
+        <button class="btn btn--primary">Subscribe</button>
+      </div>
+
+      <!-- Feature Cards -->
+      <div class="divider-label">Feature Cards</div>
+      <div class="section-health" style="margin:1rem 0;">
+        <div class="grid-3">
+          <div class="card--feature">
+            <div class="feature-icon feature-icon--1">
+              <span class="icon-placeholder">🏥</span>
+            </div>
+            <h3 style="font-size:1.125rem;font-weight:700;margin-bottom:0.5rem;">Clinical &amp; Payer</h3>
+            <p style="font-size:0.9375rem;color:var(--text-secondary);line-height:1.6;">
+              Real-time decision support integrated directly into clinical workflows.
+            </p>
+          </div>
+          <div class="card--feature">
+            <div class="feature-icon feature-icon--2">
+              <span class="icon-placeholder">👤</span>
+            </div>
+            <h3 style="font-size:1.125rem;font-weight:700;margin-bottom:0.5rem;">Patient-Centered</h3>
+            <p style="font-size:0.9375rem;color:var(--text-secondary);line-height:1.6;">
+              Personalized risk stratification powered by longitudinal EHR data.
+            </p>
+          </div>
+          <div class="card--feature">
+            <div class="feature-icon feature-icon--3">
+              <span class="icon-placeholder">🧬</span>
+            </div>
+            <h3 style="font-size:1.125rem;font-weight:700;margin-bottom:0.5rem;">Pharma &amp; Life Science</h3>
+            <p style="font-size:0.9375rem;color:var(--text-secondary);line-height:1.6;">
+              Accelerate drug discovery with multi-modal foundation model embeddings.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Person Cards -->
+      <div class="divider-label">Person / Founder Cards</div>
+      <div class="grid-4" style="max-width:900px;">
+        <div class="person-card">
+          <div class="person-card__avatar">
+            <span class="person-card__avatar-initials">AK</span>
+          </div>
+          <div class="person-card__name">Alex Kim</div>
+          <div class="person-card__title">Co-Founder &amp; CEO</div>
+          <div class="person-card__desc">PhD in ML, Carnegie Mellon University</div>
+        </div>
+        <div class="person-card">
+          <div class="person-card__avatar" style="background:linear-gradient(135deg,#008A8A,#006A6A);">
+            <span class="person-card__avatar-initials">SL</span>
+          </div>
+          <div class="person-card__name">Sarah Lin</div>
+          <div class="person-card__title">Co-Founder &amp; CTO</div>
+          <div class="person-card__desc">Health Informatics, UCSF</div>
+        </div>
+        <div class="person-card">
+          <div class="person-card__avatar" style="background:linear-gradient(135deg,#009C9C,#007A7A);">
+            <span class="person-card__avatar-initials">JR</span>
+          </div>
+          <div class="person-card__name">James Ryu</div>
+          <div class="person-card__title">Head of Research</div>
+          <div class="person-card__desc">Biostatistics &amp; Clinical AI</div>
+        </div>
+        <div class="person-card">
+          <div class="person-card__avatar" style="background:linear-gradient(135deg,#007D7D,#004A4A);">
+            <span class="person-card__avatar-initials">MP</span>
+          </div>
+          <div class="person-card__name">Maria Park</div>
+          <div class="person-card__title">VP Product</div>
+          <div class="person-card__desc">Clinical Workflow Design</div>
+        </div>
+      </div>
+
+      <!-- News Cards -->
+      <div class="divider-label">News Cards</div>
+      <div class="grid-3">
+        <div class="news-card">
+          <div class="news-card__meta">
+            <span class="badge">Press Release</span>
+            <span class="news-card__date">Mar 4, 2026</span>
+          </div>
+          <div class="news-card__title">Xlue Raises Series A to Expand Health Foundation Model Platform</div>
+          <a href="#" class="news-card__link">Read more →</a>
+        </div>
+        <div class="news-card">
+          <div class="news-card__meta">
+            <span class="badge">Research</span>
+            <span class="news-card__date">Feb 18, 2026</span>
+          </div>
+          <div class="news-card__title">Benchmarking EHR-SHOT: Xlue Achieves SOTA on Clinical Prediction Tasks</div>
+          <a href="#" class="news-card__link">Read more →</a>
+        </div>
+        <div class="news-card">
+          <div class="news-card__meta">
+            <span class="badge">Clinical AI</span>
+            <span class="news-card__date">Jan 30, 2026</span>
+          </div>
+          <div class="news-card__title">Partnership with Leading Academic Medical Center to Deploy Xlue Health</div>
+          <a href="#" class="news-card__link">Read more →</a>
+        </div>
+      </div>
+
+      <!-- Mission / CTA Card -->
+      <div class="divider-label">Mission / CTA Card</div>
+      <div style="background:var(--bg-l1);border-radius:var(--radius-xl);padding:3rem;text-align:center;">
+        <span class="badge badge--pill" style="margin-bottom:1rem;display:inline-block;">Our Mission</span>
+        <h2 style="font-size:1.875rem;font-weight:700;margin-bottom:1rem;" class="text-gradient">
+          Building the Future of Clinical Intelligence
+        </h2>
+        <p style="font-size:1rem;color:var(--text-secondary);max-width:560px;margin:0 auto 2rem;line-height:1.625;">
+          We believe every clinician should have instant access to the most
+          relevant evidence — powered by AI trained on real-world health data.
+        </p>
+        <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+          <a href="#" class="btn btn--primary btn--lg">Start with Xlue Health →</a>
+          <a href="#" class="btn btn--secondary btn--lg">Contact Us</a>
+        </div>
+      </div>
+
+      <!-- Shadow & Radius Reference -->
+      <div class="divider-label">Shadows &amp; Radius</div>
+      <div class="demo-box" style="gap:2rem;justify-content:flex-start;">
+        <div style="width:100px;height:80px;background:var(--bg-card);border-radius:var(--radius-sm);box-shadow:none;border:1px solid var(--border-default);display:flex;align-items:center;justify-content:center;font-size:0.6875rem;color:var(--text-tertiary);">none</div>
+        <div style="width:100px;height:80px;background:var(--bg-card);border-radius:var(--radius-md);box-shadow:var(--shadow-light);display:flex;align-items:center;justify-content:center;font-size:0.6875rem;color:var(--text-tertiary);">shadow-light</div>
+        <div style="width:100px;height:80px;background:var(--bg-card);border-radius:var(--radius-lg);box-shadow:var(--shadow-card);display:flex;align-items:center;justify-content:center;font-size:0.6875rem;color:var(--text-tertiary);">shadow-card</div>
+        <div style="width:100px;height:80px;background:var(--bg-card);border-radius:var(--radius-xl);box-shadow:var(--shadow-card);display:flex;align-items:center;justify-content:center;font-size:0.6875rem;color:var(--text-tertiary);">rounded-xl</div>
+        <div style="width:80px;height:80px;background:linear-gradient(135deg,#007D7D,#005A5A);border-radius:50%;box-shadow:var(--shadow-light);display:flex;align-items:center;justify-content:center;font-size:0.6875rem;color:#fff;">full</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── LAYOUT ─── -->
+  <section id="layout" class="section section--alt">
+    <div class="container">
+      <h2 class="section-title">Layout &amp; Spacing</h2>
+      <p class="section-subtitle">Xlue 的版型系統以 8px 為基礎單位，最大容器寬度 1280px</p>
+
+      <div class="grid-2" style="gap:3rem;align-items:start;">
+        <div>
+          <h3 style="font-size:1rem;font-weight:600;margin-bottom:1rem;color:var(--text-primary);">Container Widths</h3>
+          <div style="display:flex;flex-direction:column;gap:0.75rem;">
+            <div style="background:rgba(0,125,125,0.08);border-radius:var(--radius-md);padding:0.625rem 1rem;border-left:3px solid var(--color-primary);">
+              <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--color-primary);">max-w-3xl → 768px</div>
+              <div style="font-size:0.8125rem;color:var(--text-tertiary);">文字段落、單欄內容</div>
+            </div>
+            <div style="background:rgba(0,125,125,0.08);border-radius:var(--radius-md);padding:0.625rem 1rem;border-left:3px solid var(--color-primary);">
+              <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--color-primary);">max-w-4xl → 896px</div>
+              <div style="font-size:0.8125rem;color:var(--text-tertiary);">Section 卡片容器</div>
+            </div>
+            <div style="background:rgba(0,125,125,0.08);border-radius:var(--radius-md);padding:0.625rem 1rem;border-left:3px solid var(--color-primary);">
+              <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--color-primary);">max-w-5xl → 1024px</div>
+              <div style="font-size:0.8125rem;color:var(--text-tertiary);">多欄佈局</div>
+            </div>
+            <div style="background:rgba(0,125,125,0.08);border-radius:var(--radius-md);padding:0.625rem 1rem;border-left:3px solid var(--color-primary);">
+              <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--color-primary);">max-w-7xl → 1280px</div>
+              <div style="font-size:0.8125rem;color:var(--text-tertiary);">導覽列、全頁佈局</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h3 style="font-size:1rem;font-weight:600;margin-bottom:1rem;color:var(--text-primary);">Breakpoints</h3>
+          <div style="display:flex;flex-direction:column;gap:0.75rem;">
+            <div style="background:rgba(0,125,125,0.08);border-radius:var(--radius-md);padding:0.625rem 1rem;border-left:3px solid #008A8A;">
+              <div style="font-family:var(--font-mono);font-size:0.75rem;color:#008A8A;">sm · 640px</div>
+              <div style="font-size:0.8125rem;color:var(--text-tertiary);">按鈕橫排 sm:flex-row</div>
+            </div>
+            <div style="background:rgba(0,125,125,0.08);border-radius:var(--radius-md);padding:0.625rem 1rem;border-left:3px solid #008A8A;">
+              <div style="font-family:var(--font-mono);font-size:0.75rem;color:#008A8A;">md · 768px</div>
+              <div style="font-size:0.8125rem;color:var(--text-tertiary);">多欄 Grid、桌面導覽顯示</div>
+            </div>
+            <div style="background:rgba(0,125,125,0.08);border-radius:var(--radius-md);padding:0.625rem 1rem;border-left:3px solid #008A8A;">
+              <div style="font-family:var(--font-mono);font-size:0.75rem;color:#008A8A;">lg · 1024px</div>
+              <div style="font-size:0.8125rem;color:var(--text-tertiary);">大 viewport 細調</div>
+            </div>
+            <div style="background:rgba(0,125,125,0.08);border-radius:var(--radius-md);padding:0.625rem 1rem;border-left:3px solid #008A8A;">
+              <div style="font-family:var(--font-mono);font-size:0.75rem;color:#008A8A;">2xl · 1400px</div>
+              <div style="font-size:0.8125rem;color:var(--text-tertiary);">Container 最大限制</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider-label" style="margin-top:3rem;">Spacing Scale (8px base)</div>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end;">
+        <div style="text-align:center;">
+          <div style="background:var(--color-primary);border-radius:4px;width:16px;height:4px;margin:0 auto 0.5rem;"></div>
+          <div style="font-family:var(--font-mono);font-size:0.6875rem;color:var(--text-tertiary);">4px</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="background:var(--color-primary);border-radius:4px;width:16px;height:8px;margin:0 auto 0.5rem;"></div>
+          <div style="font-family:var(--font-mono);font-size:0.6875rem;color:var(--text-tertiary);">8px</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="background:var(--color-primary);border-radius:4px;width:16px;height:12px;margin:0 auto 0.5rem;"></div>
+          <div style="font-family:var(--font-mono);font-size:0.6875rem;color:var(--text-tertiary);">12px</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="background:var(--color-primary);border-radius:4px;width:16px;height:16px;margin:0 auto 0.5rem;"></div>
+          <div style="font-family:var(--font-mono);font-size:0.6875rem;color:var(--text-tertiary);">16px</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="background:var(--color-primary);border-radius:4px;width:16px;height:24px;margin:0 auto 0.5rem;"></div>
+          <div style="font-family:var(--font-mono);font-size:0.6875rem;color:var(--text-tertiary);">24px</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="background:var(--color-primary);border-radius:4px;width:16px;height:32px;margin:0 auto 0.5rem;"></div>
+          <div style="font-family:var(--font-mono);font-size:0.6875rem;color:var(--text-tertiary);">32px</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="background:var(--color-primary);border-radius:4px;width:16px;height:48px;margin:0 auto 0.5rem;"></div>
+          <div style="font-family:var(--font-mono);font-size:0.6875rem;color:var(--text-tertiary);">48px</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="background:var(--color-primary);border-radius:4px;width:16px;height:64px;margin:0 auto 0.5rem;"></div>
+          <div style="font-family:var(--font-mono);font-size:0.6875rem;color:var(--text-tertiary);">64px</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="background:var(--color-primary);border-radius:4px;width:16px;height:80px;margin:0 auto 0.5rem;"></div>
+          <div style="font-family:var(--font-mono);font-size:0.6875rem;color:var(--text-tertiary);">80px</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TOKENS ─── -->
+  <section id="tokens" class="section">
+    <div class="container">
+      <h2 class="section-title">CSS Design Tokens</h2>
+      <p class="section-subtitle">將以下 :root 宣告貼入任何新平台即可繼承完整 Xlue 品牌配色</p>
+
+      <pre class="code-block"><span class="comment">/* ── Xlue Design System — CSS Tokens v1.0 ── */</span>
+:root {
+  <span class="comment">/* Brand Colors */</span>
+  <span class="prop">--color-primary</span>:        <span class="value">#007D7D</span>;   <span class="comment">/* hsl(180 100% 25%) */</span>
+  <span class="prop">--color-primary-hover</span>:  <span class="value">#00A7A2</span>;   <span class="comment">/* hsl(178 100% 32%) */</span>
+  <span class="prop">--color-primary-light</span>:  <span class="value">#009C9C</span>;   <span class="comment">/* hsl(180 100% 31%) */</span>
+  <span class="prop">--color-primary-dark</span>:   <span class="value">#005A5A</span>;   <span class="comment">/* hsl(180 100% 18%) */</span>
+  <span class="prop">--color-gradient-start</span>: <span class="value">#00948A</span>;   <span class="comment">/* gradient from */</span>
+  <span class="prop">--color-gradient-end</span>:   <span class="value">#3A5A56</span>;   <span class="comment">/* gradient to   */</span>
+
+  <span class="comment">/* Background Layers */</span>
+  <span class="prop">--bg-l0</span>:   <span class="value">#FAFAF8</span>;   <span class="comment">/* body — warm off-white    */</span>
+  <span class="prop">--bg-l1</span>:   <span class="value">#EFF4F4</span>;   <span class="comment">/* cards / sections         */</span>
+  <span class="prop">--bg-l2</span>:   <span class="value">#F4F7F6</span>;   <span class="comment">/* footer                   */</span>
+  <span class="prop">--bg-card</span>: <span class="value">#FFFFFF</span>;   <span class="comment">/* pure white card          */</span>
+
+  <span class="comment">/* Text Colors */</span>
+  <span class="prop">--text-primary</span>:   <span class="value">#0D2B2B</span>;          <span class="comment">/* hsl(180 50% 10%) */</span>
+  <span class="prop">--text-secondary</span>: <span class="value">#2C4444</span>;          <span class="comment">/* hsl(180 30% 22%) */</span>
+  <span class="prop">--text-tertiary</span>:  <span class="value">#5C6C6C</span>;          <span class="comment">/* hsl(180 9% 40%)  */</span>
+  <span class="prop">--text-weak</span>:      <span class="value">rgba(14,46,46,.8)</span>; <span class="comment">/* 80% opacity      */</span>
+
+  <span class="comment">/* Borders */</span>
+  <span class="prop">--border-default</span>: <span class="value">#D8E2E0</span>;
+  <span class="prop">--border-dark</span>:    <span class="value">rgba(255,255,255,.08)</span>;
+
+  <span class="comment">/* Shadows */</span>
+  <span class="prop">--shadow-card</span>:  <span class="value">0 4px 12px rgba(0,0,0,.15)</span>;
+  <span class="prop">--shadow-light</span>: <span class="value">0 2px  8px rgba(0,0,0,.08)</span>;
+
+  <span class="comment">/* Border Radius */</span>
+  <span class="prop">--radius-sm</span>:   <span class="value">6px</span>;
+  <span class="prop">--radius-md</span>:   <span class="value">8px</span>;
+  <span class="prop">--radius-lg</span>:   <span class="value">12px</span>;
+  <span class="prop">--radius-xl</span>:   <span class="value">16px</span>;
+  <span class="prop">--radius-full</span>: <span class="value">9999px</span>;
+
+  <span class="comment">/* Typography */</span>
+  <span class="prop">--font-sans</span>: <span class="string">"Inter", ui-sans-serif, system-ui, -apple-system,
+               BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+               Arial, "Noto Sans", sans-serif</span>;
+  <span class="prop">--font-mono</span>: <span class="string">"JetBrains Mono", ui-monospace, SFMono-Regular,
+               Menlo, monospace</span>;
+}</pre>
+
+      <div class="divider-label" style="margin-top:3rem;">Tailwind Arbitrary Values Quick Reference</div>
+      <div class="grid-2" style="gap:1rem;">
+        <pre class="code-block" style="font-size:0.75rem;"><span class="comment">/* Colors */</span>
+bg-[#007D7D]               <span class="comment">→ brand primary</span>
+hover:bg-[#00A7A2]         <span class="comment">→ hover state</span>
+text-[#0D2B2B]             <span class="comment">→ primary text</span>
+text-[#2C4444]             <span class="comment">→ secondary text</span>
+text-[#5C6C6C]             <span class="comment">→ tertiary text</span>
+bg-[#EFF4F4]               <span class="comment">→ surface L1</span>
+bg-[#F4F7F6]               <span class="comment">→ footer</span>
+border-[#D8E2E0]           <span class="comment">→ default border</span></pre>
+        <pre class="code-block" style="font-size:0.75rem;"><span class="comment">/* Patterns */</span>
+<span class="comment">// Primary button</span>
+bg-[#007D7D] hover:bg-[#00A7A2] text-white
+
+<span class="comment">// Gradient text</span>
+bg-gradient-to-r from-[#00948A] to-[#3A5A56]
+bg-clip-text text-transparent
+
+<span class="comment">// Card</span>
+bg-[#EFF4F4] rounded-2xl p-8
+
+<span class="comment">// Nav</span>
+fixed top-0 bg-background/90
+backdrop-blur-md z-50 h-16</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="section--footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__brand-name">Xlue<span style="color:var(--color-primary);">.</span></div>
+          <p class="footer__tagline">
+            Health Foundation Models powering smarter clinical decisions.
+            A Carnegie Mellon University spin-off.
+          </p>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <span class="badge badge--pill">CMU Spin-off</span>
+            <span class="badge badge--pill">Healthcare AI</span>
+          </div>
+        </div>
+        <div>
+          <div class="footer__col-title">Product</div>
+          <ul class="footer__links">
+            <li><a href="#" class="footer__link">Xlue Health</a></li>
+            <li><a href="#" class="footer__link">Xlue Copilot</a></li>
+            <li><a href="#" class="footer__link">Foundation Models</a></li>
+            <li><a href="#" class="footer__link">API Access</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__col-title">Research</div>
+          <ul class="footer__links">
+            <li><a href="#" class="footer__link">Publications</a></li>
+            <li><a href="#" class="footer__link">EHR-SHOT Benchmark</a></li>
+            <li><a href="#" class="footer__link">Blog</a></li>
+            <li><a href="#" class="footer__link">Open Source</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__col-title">Company</div>
+          <ul class="footer__links">
+            <li><a href="#" class="footer__link">About</a></li>
+            <li><a href="#" class="footer__link">Careers</a></li>
+            <li><a href="#" class="footer__link">Contact</a></li>
+            <li><a href="#" class="footer__link">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <div class="footer__copy">© 2026 Xlue, Inc. All rights reserved.</div>
+        <div style="font-size:0.8125rem;color:var(--text-weak);">
+          Design System v1.0 · Built with ♥ at CMU
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
